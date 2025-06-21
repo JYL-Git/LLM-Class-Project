@@ -13,6 +13,10 @@ def generate_investment_recommendation(query: str):
     retrieved_docs = retrieve_similar_documents(query)
     top_docs = rerank_documents(query, retrieved_docs)
 
+    logger.info("📚 선택된 문서 목록:")
+    for i, doc in enumerate(top_docs):
+        logger.info(f"[{i+1}] {doc['title']}")
+
     context = "\n---\n".join([
         f"[{i+1}] {doc['title']}\n{clean_text(doc['content'])[:MAX_DOC_CHAR_LENGTH]}"
         for i, doc in enumerate(top_docs[:MAX_DOC_COUNT])
@@ -57,6 +61,3 @@ if __name__ == "__main__":
             print(recommendation)
         except Exception as e:
             logger.error(f"❌ 오류 발생: {e}")
-
-
-#test

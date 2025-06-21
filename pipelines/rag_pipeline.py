@@ -5,12 +5,16 @@ from utils.utils import OPENAI_API_KEY, clean_text, count_tokens, logger
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-MAX_DOC_CHAR_LENGTH = 600
+MAX_DOC_CHAR_LENGTH = 500
 MAX_DOC_COUNT = 5
 
 def generate_investment_recommendation(query: str):
     retrieved_docs = retrieve_similar_documents(query)
     top_docs = retrieved_docs[:TOP_K_RERANK]  # rerank 없이 단순 상위 K개 사용
+
+    logger.info("📚 선택된 문서 목록:")
+    for i, doc in enumerate(top_docs):
+        logger.info(f"[{i+1}] {doc['title']}")
 
     context = "\n---\n".join([
         f"[{i+1}] {doc['title']}\n{clean_text(doc['content'])[:MAX_DOC_CHAR_LENGTH]}"
@@ -28,7 +32,7 @@ def generate_investment_recommendation(query: str):
     )
 
     total_text = system_prompt + "\n" + user_prompt
-    logger.info(f"🧮 rag_pipeline prompt token count: {count_tokens(total_text)}")
+    logger.info(f"🧮 전체 메시지 예상 토큰 수: {count_tokens(total_text)}")
 
     response = client.chat.completions.create(
         model="gpt-4-turbo",
