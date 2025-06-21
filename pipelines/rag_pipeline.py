@@ -5,8 +5,8 @@ from utils.utils import OPENAI_API_KEY, clean_text, count_tokens, logger
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-MAX_DOC_CHAR_LENGTH = 300
-MAX_DOC_COUNT = 3
+MAX_DOC_CHAR_LENGTH = 600
+MAX_DOC_COUNT = 5
 
 def generate_investment_recommendation(query: str):
     retrieved_docs = retrieve_similar_documents(query)
